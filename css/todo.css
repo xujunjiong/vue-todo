@@ -1,0 +1,341 @@
+body{
+	background-color:#edf0f1;
+}
+input,button{
+	outline: none;
+  border: 0;
+}
+body, div, dl, dt, dd,          /*统一样式*/
+ul, ol, li, h1, h2, h3,
+h4, h5, h6, pre, code,
+form, fieldset, legend,
+lable, input, button, textarea,
+p, blockquote, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+ul,ol,li{
+	list-style: none;
+}
+.app-header{
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 60px;
+	box-shadow: 0 2px 4px rgba( 0, 0, 0, 0.25);
+	z-index: 8;
+	transition:  .4s ease-in-out;
+}
+.app-title{
+	font-size: 22px;
+	line-height: 60px;
+	text-align: center;
+	color:#fff;
+	letter-spacing: 1px;
+}
+.app-menu{
+	position: absolute;
+	top:14px;
+	left:5%;
+	padding: 3px 0;
+	width: 40px;
+}
+.app-menu >.back{
+	margin-top: 6px;
+	margin-left: 14px;
+	border: 2px solid #fff;
+	border-top-color: transparent;
+	border-right-color: transparent;
+	height: 12px;
+	width: 12px;
+	transform: rotate(45deg);
+}
+.mstrip{
+	margin: 6px auto;
+	width: 60%;
+	height: 2px;
+	background: #fff;
+	border-radius: 10px;
+}
+.app-main{
+	position: relative;
+	top:80px;
+}
+.todo-list,.completed-list{
+	position: absolute;
+	margin: 0 auto;
+	width: 100%;
+	padding-bottom: 100px;
+}
+.task-item,.completed-item{
+	position: relative;
+	margin:0 auto 15px;
+	padding:20px 0 ;
+	width: 90%;
+	box-shadow:0 1px 2px rgba(0, 0, 0, .1);
+	border-radius: 3px;
+	background-color: #fff;
+	overflow: hidden;
+}
+.task-item span,.completed-item span{
+	float:left;
+	width: 65%;
+	padding-left: 14px;
+}
+.completed-item span{
+	text-decoration: line-through;
+	opacity: 0.4;
+}
+.clear{
+	position:absolute;
+	top:50%;
+	right:52px;
+	margin-top: -14px;
+}
+.clear i{
+	padding: 6px;
+	width: 28px;
+	height: 28px;
+	font-size: 26px;
+	opacity: 0.4;
+	cursor: pointer;
+}
+.finish{
+	position:absolute;
+	top:50%;
+	right:12px;
+	margin-top: -14px;
+}
+.finish i{
+	padding: 6px;
+	width: 28px;
+	height: 28px;
+	font-size: 26px;
+	opacity: 0.4;
+	cursor: pointer;
+}
+.menu-content{
+	position:fixed;
+	top:0;
+	width: 250px;
+	height: 100%;
+	background: #fff;
+	z-index: 3;
+	transition: all .3s ease;
+}
+.cover{
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background: #000;
+	opacity:0.4;
+	z-index: 2;
+}
+.menu-list{
+	margin-top: 80px;
+	width: 100%;
+	height: 300px;
+}
+.menu-item{
+	position: relative;
+	height: 60px;
+	cursor:pointer;
+	transition: .3s ease-in-out;
+	color:#757575;
+}
+.menu-item:hover{
+	background-color: #eee;
+}
+.menu-item > i{
+	position: absolute;
+	top:22px;
+	left:30px;
+	width: 20px;
+	height: 20px;
+	font-size: 21px;
+}
+.menu-item > span{
+	position: absolute;
+	top:22px;
+	left:65px;
+	font-size: 16px;
+	letter-spacing:1px;
+}
+.addContent{
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	z-index: 9;
+	background-color:rgba(255, 255, 255, 1) ;
+}
+.addContent input{
+	display: block;
+	margin: 0 auto;
+	margin-top: 100px;
+	border-bottom: 2px solid #BDBDBD;
+	width: 90%;
+	height: 50px;
+	font-size: 22px;
+	background-color: transparent;
+	transition: .3s ease;
+}
+.btnBox{
+	position: fixed;
+	bottom: 3%;
+	right:5%;
+	z-index: 10;
+	transition: all .3s ease-in-out;
+}
+.addBtn{
+	position: relative;
+	width: 60px;
+	height: 60px;
+	background-color: rgb(255, 193, 7);
+	border-radius: 50%;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, .2);
+	z-index: 12;
+}
+.addBtn i{
+	position: absolute;
+	top:15px;
+	left:15px;
+	width: 30px;
+	height: 30px;
+	font-size: 29px;
+	font-weight: 500;
+	color:#fff;
+	transition: all .2s ease-in-out;
+}
+.okBtn{
+	position: absolute;
+	left: 5px;
+	width: 50px;
+	height: 50px;
+	font-size: 14px;
+	line-height: 50px;
+	text-align: center;
+	color:#fff;
+	/* background-color: #757575; */
+	border-radius: 50%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+	z-index: 11;
+	transition: all .15s ease-in-out;
+}
+.menu-card{
+	position: fixed;
+	top:160px;
+	left:5%;
+	width: 90%;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+	background-color: #fff;
+	border-radius: 3px;
+	z-index: 2;
+}
+.selet-color-panel{
+	padding: 20px 0;
+}
+.selet-color-panel > p{
+	width: 300px;
+	margin: 0 auto;
+	font-size: 16px;
+	line-height: 30px;
+	padding: 30px 0;
+  text-align: center;
+}
+.color-item{
+	position: relative;
+	height: 60px;
+	cursor: pointer;
+}
+.color-item span{
+	position: absolute;
+	top:20px;
+	left: 23%;
+	font-size: 16px;
+	letter-spacing: 1px;
+	color: #616161;
+}
+.color-block{
+	position: absolute;
+	top:20px;
+	right: 26%;
+	width: 70px;
+	height: 20px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+.color-block div{
+	float: left;
+	width: 35px;
+	height: 20px;
+	background-color: #3C763D;
+}
+
+/* 过渡动画 */
+.fade2-enter-active{
+	transition: all 0.3s ease-in-out;
+}
+.fade2-enter{
+	opacity: 0;
+}
+.fade2-enter-to{
+	opacity: 1;
+}
+/* 分割线 */
+.fade-enter-active,.fade-leave-active{
+	transition: all .3s ease-in-out;
+}
+.fade-enter,.fade-leave-to{
+	opacity: 0;
+}
+.fade-leave,.fade-enter-to{
+	opacity: 0.4;
+}
+.rotate-enter-active,.rotate-leave-active{
+	transition: all .3s ease-in-out;
+}
+.rotate-enter,.rotate-leave-to{
+	width: 0;
+	height: 0;
+}
+.rotate-enter-to,.rotate-leave{
+	width: 100%;
+	height: 100%;
+}
+.toup-enter-active{
+	transition: all .3s ease-in-out;
+}
+.toup-enter{
+	opacity: 0;
+	top:200px;
+}
+.toup-enter-to{
+	opacity: 0.4;
+	top: 160px;
+}
+.toup-leave-active{
+	transition: all .3s ease-in-out;
+}
+.toup-leave{
+	opacity: 0.4;
+}
+.toup-leave-to{
+	opacity: 0;
+}
+/* 动画 */
+.shake{
+	animation: shake .3s;
+}
+@keyframes shake{
+	30%{transform: rotate(10deg);}
+	50%{transform: rotate(0deg);}
+	80%{transform: rotate(-10deg);}
+	100%{transform: rotate(0deg);}
+}
+

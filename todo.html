@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title></title>
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link rel="stylesheet" href="css/todo.css">
+</head>
+
+<body>
+	<div id="App">
+		<app-header :headerbg="headerBg" :back="this.menuCardShow" @change-left="changeLeft"></app-header>
+		<main class="app-main">
+			<todo-list v-if="this.list" :mytodo="this.todo" @clear="todoClear" @finish="todoFinish"></todo-list>
+			<completed-list v-else :mydone="this.done" @clear="clear"></completed-list>
+			<menu-content :myleft="this.left" @what-show="whatShow"></menu-content>
+			<cover v-show="this.show" @to-show="changeLeft"></cover>
+			<add-content @to-add="add" :headerbg="headerBg"></add-content>
+			<menu-card v-show="this.menuCardShow" @change-color="changeColor" :iswhat="isWhat"></menu-card>
+		</main>
+	</div>
+</body>
+<script type="text/x-template" id="app-header">
+	  <header class="app-header" :style="{backgroundColor:headerbg}">
+			<div class="app-title">YOONE</div>
+	  	<transition name="fade2">
+				<div class="app-menu" v-on:click="changeLeft" v-if="!back">					
+						<div class="mstrip"></div>
+						<div class="mstrip"></div>
+						<div class="mstrip"></div>
+				</div>
+		  </transition>
+	  	<transition name="fade2">
+				<div class="app-menu" v-on:click="changeLeft" v-if="back">			
+							<div class="back"></div>			
+				</div>
+			</transition>
+		</header>
+</script>
+
+<script type="text/x-template" id="todo-list">
+	<ul class="todo-list">
+			<div class="task-item" v-for="(item,index) in todo">
+				<span>{{item}}</span>
+				<div class="clear" @click="clear(index)">
+					<i class="iconfont icon-shanchu"></i>
+				</div>
+				<div class="finish" @click="finish(index)">
+					<i class="iconfont icon-dui"></i>
+				</div>
+			</div>
+		</ul>
+	</script>
+
+<script type="text/x-template" id="completed-list">
+	<ul class="completed-list">
+			<div class="completed-item" v-for="(item,index) in done">
+				<span>{{item}}</span>
+				<div class="finish">
+					<i class="iconfont icon-shanchu" @click="clear(index)"></i>
+				</div>
+			</div>
+		</ul>
+	</script>
+
+<script type="text/x-template" id="menu-content">
+	<div class="menu-content" v-bind:style="{left:myleft +'px'}">
+			<ul class="menu-list">
+				<li class="menu-item" v-for="(item,index) in items" @click="whatShow(index)">
+					<i :class="item.icon"></i>
+					<span>{{item.message}}</span>
+			</li>
+			</ul>
+		</div>
+	</script>
+
+<script type="text/x-template" id="add-content">
+	<div>
+			<transition name="rotate">
+				<div class="addContent" v-if="show">
+					<input type="text" v-model.trim="content" placeholder="添加新的任务..." maxlength="64" @keyup.enter="add">
+				</div>
+			</transition>
+			<div class="btnBox">
+				<div class="addBtn" @click="back">
+					<i class="iconfont icon-jia" :style="{transform:mytransform}"></i>
+				</div>
+				<div class="okBtn" @click="add" :style="{bottom:mybottom+'px',backgroundColor:bg}">确认</div>
+			</div>
+		</div>
+	</script>
+
+<script type="text/x-template" id="menu-card">
+	<transition name="toup">
+			<div class="menu-card">
+				<ul class="selet-color-panel" v-if="iswhat">
+					<li class="color-item" v-for="(item,index) in items" @click="changeColor(item.bg1,index)" >
+						<span>{{item.message}}</span>
+						<div class="color-block" :class="{shake:item.shake}">
+							<div :style="{backgroundColor:item.bg1}"></div>
+							<div :style="{backgroundColor:item.bg2}"></div>
+						</div>
+					</li>
+				</ul>
+				<ul class="selet-color-panel" v-else>
+						<p><b>药丸清单，一个专治拖延症患者的应用。</b><br>
+						当前为测试版本，持续更新中...
+						<br><br><br>
+						@2018 <a href="http://biaoyansu.com">个人喜欢的学习网站</a>
+						</p>
+				</ul>
+			</div>
+	</transition>
+</script>
+
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+	var appHeader ={
+		props:["headerbg","back"],
+		template:"#app-header",
+		methods:{
+			changeLeft:function(){
+				this.$emit("change-left"); //打开/关闭菜单
+			}
+		}
+	}
+	var todoList = { //代做事项
+		props: ["mytodo"],
+		data: function() {
+			return {
+				todo: this.mytodo //代做
+			}
+		},
+		template: '#todo-list',
+		methods: {
+			clear: function(index) {
+				this.$emit("clear", index); //触发事件,删除父类里面的data
+			},
+			finish: function(index) {
+				this.$emit("finish", index); //触发事件,把todo传给done,并删除父类里面的data
+			}
+		}
+	};
+
+	var completedList = { //完成事项
+		props: ["mydone"],
+		data: function() {
+			return {
+				done: this.mydone //完成
+			}
+		},
+		template: '#completed-list',
+		methods: {
+			clear: function(index) {
+				this.$emit("clear", index); //触发事件,把数据传给父类
+			}
+		}
+	};
+
+	var menuContent = { //一级菜单
+		props: {
+			myleft: {
+				default: -260
+			}
+		},
+		data: function() {
+			return {
+				left: this.myleft,
+				items: [{
+					icon: "iconfont icon-4",
+					message: "待做事项"
+				}, {
+					icon: "iconfont icon-zongheceping",
+					message: "完成事项"
+				}, {
+					icon: "iconfont icon-huanfu",
+					message: "皮肤"
+				}, {
+					icon: "iconfont icon-yiwentishi",
+					message: "关于"
+				}]
+			}
+		},
+		template: '#menu-content',
+		methods: {
+			whatShow: function(index) {
+				this.$emit("what-show", index);
+			}
+		}
+	};
+
+	var cover = { //全屏遮罩
+		template: '<transition name="fade"><div class="cover" @click="show"></div></transition>',
+		methods: {
+			show: function() {
+				this.$emit("to-show");
+			}
+		}
+	};
+	var addContent = { //添加多一项
+	  props:["headerbg"],
+		data: function() {
+			return {
+				bg: "#757575",
+				content: "",
+				mybottom: 5,
+				mytransform: "rotate(0deg)",
+				show: false
+			}
+		},
+		template: '#add-content',
+		methods: {
+			back: function() {
+				if (this.mybottom == 90) {
+					this.mybottom = 5;
+					this.mytransform = "rotate(0deg)";
+					this.show = false;
+				} else {
+					this.mybottom = 90;
+					this.mytransform = "rotate(-45deg)";
+					this.show = true;
+				}
+			},
+			add: function() {
+				if (this.content == "") {
+					//内容为空什么都不做
+				} else {
+					this.back();
+					this.$emit("to-add", this.content);
+					this.content = "";
+					this.bg = "#757575";
+				}
+			}
+		},
+		watch: {
+			content: function() {
+				if (this.content != "") {
+					this.bg = this.headerbg;
+				} else {
+					this.bg = "#757575";
+				}
+			}
+		}
+	};
+
+	var menuCard = {
+		props:["iswhat"],
+		data: function() {
+			return {
+				items: [{
+					message: "文艺药丸",
+					bg1: "#25b99a",
+					bg2: "#E8F5E9",
+					shake:false
+				}, {
+					message: "狂热药丸",
+					bg1: "#F44336",
+					bg2: "#FFEBEE",
+					shake:false
+				}, {
+					message: "高冷药丸",
+					bg1: "#2196F3",
+					bg2: "#E3F2FD",
+					shake:false
+				}]
+			}
+		},
+		template: "#menu-card",
+		methods: {
+			changeColor: function(val,index) {
+				this.$emit("change-color", val);//改变head颜色
+			  for(var i = 0;i<this.items.length;i+=1){		//添加一个上下摆小动画
+						if(i == index){
+							this.items[index].shake = true;
+						}else{
+							this.items[i].shake = false;
+						}
+				}				
+			}
+		}
+	}
+
+	var vm = new Vue({ //实例一个vue对象
+		el: "#App",
+		data: {
+			todo: ["点击右下方按钮，写下您的第一件事项"],
+			done: [],
+			list: true, //切换事项
+			left: -260,
+			show: false,
+			headerBg: "#25b99a", //top背景色
+			menuCardShow: false,
+			isWhat:true
+		},
+		methods: {
+			changeLeft: function() { //关闭一级菜单
+				if (this.left == 0 && this.show == true) {
+					this.left = -260;
+					this.show = !this.show;
+				} else if (this.left == -260 && this.show == false) { //跳出一级菜单
+					this.left = 0;
+					this.show = !this.show;
+				} else {
+					this.show = !this.show;
+					this.menuCardShow = !this.menuCardShow
+				}
+			},
+			whatShow: function(index) { //展示哪个二级菜单,代做事项·已完成事项·皮肤·关于
+				switch (index) {
+					case 0:
+						this.list = true;
+						this.changeLeft();
+						break;
+					case 1:
+						this.list = false;
+						this.changeLeft();
+						break;
+					case 2:
+						this.left = -260;
+						this.isWhat = true;
+						this.menuCardShow = !this.menuCardShow;
+						break;
+					case 3:
+						this.left = -260;
+						this.isWhat = false;
+						this.menuCardShow = !this.menuCardShow;
+						break;
+				}
+			},
+			todoClear: function(index) { //删除代做一个代做事项
+				this.todo.splice(index, 1);
+			},
+			todoFinish: function(index) { //完成一个代做事项
+
+				var content = this.todo[index];
+				this.todo.splice(index, 1);
+				this.done.unshift(content);
+
+			},
+			clear: function(index) { //删除一个已完成事项
+				this.done.splice(index, 1);
+			},
+			add: function(val) { //添加一个代做事项
+				this.todo.unshift(val);
+				this.list = true;
+				if (this.left == 0 && this.show == true) {
+					this.left = -260;
+					this.show = !this.show;
+				}
+			},
+			changeColor: function(val) { //改变顶部的背景色
+				this.headerBg = val;
+			}
+		},
+		watch: {
+			todo: function(val) {
+				localStorage.todo = JSON.stringify(val);
+			},
+			done: function(val) {
+				localStorage.done = JSON.stringify(val);
+			},
+			headerBg: function(val) {
+				localStorage.headerBg = JSON.stringify(val);
+			}
+		},
+		beforeMount: function() { //加载HTML页面之前localStorage.todo.length !=0
+			if (localStorage.getItem("todo")) {
+				this.todo = JSON.parse(localStorage.getItem("todo"));
+				this.done = JSON.parse(localStorage.getItem("done"));
+				if(localStorage.getItem("headerBg")){     //判断有没有设置了top颜色
+					this.headerBg = JSON.parse(localStorage.getItem("headerBg"));
+				}
+			}
+		},
+		components: {
+			"app-header":appHeader,
+			"menu-content": menuContent,
+			"cover": cover,
+			"todo-list": todoList,
+			"completed-list": completedList,
+			"add-content": addContent,
+			"menu-card": menuCard
+		}
+	});
+</script>
+
+</html>
